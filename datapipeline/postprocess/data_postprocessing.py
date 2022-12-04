@@ -6,11 +6,7 @@ class AbstractFactoryDataPipeline(ABC):
     """
     
     @abstractmethod
-    def preprocess_complete(self):
-        pass
-    
-    @abstractmethod
-    def preprocess_simple(self):
+    def run(self):
         pass
 
 

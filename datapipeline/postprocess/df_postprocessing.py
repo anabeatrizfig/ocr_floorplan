@@ -1,4 +1,4 @@
-from .data_processing import AbstractFactoryDataPipeline
+from datapipeline.postprocess.data_postprocessing import AbstractFactoryDataPipeline
 from IPython import embed
 import pandas as pd
 import re
@@ -6,7 +6,7 @@ import numpy as np
 from scipy.spatial import distance_matrix
 
 
-class DfPostprocessing(AbstractFactoryDataPipeline):
+class DfPostprocessingSimple(AbstractFactoryDataPipeline):
     """
     TODO
     """
@@ -15,10 +15,24 @@ class DfPostprocessing(AbstractFactoryDataPipeline):
         self.df = df
 
 
-    # def get_head(df):
-    #     return df.head()
+    def run(self, resize_factor=1):
+        df = self.df       
+        df = df[df['conf'] != -1]
+        df['text'] = df['text'].apply(lambda x: x.strip())
+        df = df[df['text']!=""]
+        df['text'] = df['text'].apply(lambda x: x.upper())
+        return df
+
+
+class DfPostprocessingComplete(AbstractFactoryDataPipeline):
+    """
+    TODO
+    """
+
+    def __init__(self, df):
+        self.df = df
     
-    def preprocess_complete(self):
+    def run(self):
 
         room_side_regex = r"[0-9]+[.][0-9]+"
 
@@ -117,14 +131,7 @@ class DfPostprocessing(AbstractFactoryDataPipeline):
         df_rooms.reset_index(inplace = True, drop = True)
 
         return df_rooms
-    
-    def preprocess_simple(self, resize_factor=1):
-        df = self.df       
-        df = df[df['conf'] != -1]
-        df['text'] = df['text'].apply(lambda x: x.strip())
-        df = df[df['text']!=""]
-        df['text'] = df['text'].apply(lambda x: x.upper())
-        return df
+
 
 
 """
